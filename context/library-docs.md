@@ -20,12 +20,14 @@ Approved dependencies. Add an entry before using any new third-party package. Ve
 | zod | 3.x | Validation | All inputs at API boundary |
 | @prisma/client, prisma | 6.x | ORM + migrations | RLS via migrations; client extension for scoping |
 | pg | 8.x | Native pg for RLS context (`SET LOCAL`) | Used inside `packages/db` only |
+| dotenv | 17.4.2 | Load local Prisma CLI environment | `packages/db` only; `.env` remains untracked |
 
 ## Auth
 
 | Package | Version (target) | Purpose | Constraints |
 |---|---|---|---|
 | better-auth | latest stable | Email/password, MFA, SSO OIDC/SAML, orgs | Tenant = org; resolve via subdomain |
+| @better-auth/prisma-adapter | 1.7.2 | Better Auth Prisma integration | Create auth instance per tenant-scoped transaction |
 | @simplewebauthn/server / browser | latest | WebAuthn MFA | |
 
 ## UI (web)

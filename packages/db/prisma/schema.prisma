@@ -1,0 +1,219 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleScope {
+  ALL    @map("all")
+  BRANCH @map("branch")
+}
+
+enum UserStatus {
+  ACTIVE    @map("active")
+  INVITED   @map("invited")
+  SUSPENDED @map("suspended")
+}
+
+model Tenant {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  slug      String   @unique
+  logoUrl   String?  @map("logo_url")
+  timezone  String   @default("Asia/Jakarta")
+  locale    String   @default("id-ID")
+  currency  String   @default("IDR")
+  regional  Json     @default("{}")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  branches  Branch[]
+  users     User[]
+  roles     Role[]
+  userRoles UserRole[]
+  auditLogs AuditLog[]
+  sessions  Session[]
+  accounts  Account[]
+  verifications Verification[]
+
+  @@map("tenants")
+}
+
+model Branch {
+  id                String   @id @default(uuid()) @db.Uuid
+  tenantId          String   @map("tenant_id") @db.Uuid
+  name              String
+  code              String
+  timezone          String
+  currency          String
+  holidayCalendarId String?  @map("holiday_calendar_id") @db.Uuid
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userRoles         UserRole[]
+  auditLogs         AuditLog[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId])
+  @@map("branches")
+}
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  tenantId     String     @map("tenant_id") @db.Uuid
+  name         String
+  email        String
+  emailVerified Boolean  @default(false) @map("email_verified")
+  image        String?
+  passwordHash String?    @map("password_hash")
+  mfaSecret    String?    @map("mfa_secret")
+  status       UserStatus @default(ACTIVE)
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  tenant       Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userRoles    UserRole[]
+  auditLogs    AuditLog[] @relation("AuditActor")
+  sessions     Session[]
+  accounts     Account[]
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String   @id @default(uuid()) @db.Uuid
+  tenantId              String   @map("tenant_id") @db.Uuid
+  userId                String   @map("user_id") @db.Uuid
+  issuer                String
+  accountId             String   @map("account_id")
+  providerId            String   @map("provider_id")
+  accessToken           String?  @map("access_token")
+  refreshToken          String?  @map("refresh_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at")
+  scope                 String?
+  idToken               String?  @map("id_token")
+  password              String?
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([issuer, accountId])
+  @@index([tenantId, userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(uuid()) @db.Uuid
+  tenantId   String   @map("tenant_id") @db.Uuid
+  identifier String
+  value      String
+  expiresAt  DateTime @map("expires_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, identifier])
+  @@map("verifications")
+}
+
+model Role {
+  id         String    @id @default(uuid()) @db.Uuid
+  tenantId   String    @map("tenant_id") @db.Uuid
+  key        String
+  name       String
+  scope      RoleScope
+  isTemplate Boolean   @default(false) @map("is_template")
+  permissions Json     @default("[]")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userRoles  UserRole[]
+
+  @@unique([tenantId, key])
+  @@index([tenantId])
+  @@map("roles")
+}
+
+model UserRole {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  roleId    String   @map("role_id") @db.Uuid
+  branchId  String?  @map("branch_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  branch    Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, userId, roleId, branchId])
+  @@index([tenantId, userId])
+  @@index([tenantId, branchId])
+  @@map("user_roles")
+}
+
+model Permission {
+  id        String   @id @default(uuid()) @db.Uuid
+  resource  String
+  action    String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([resource, action])
+  @@map("permissions")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  actorId   String?  @map("actor_id") @db.Uuid
+  action    String
+  entity    String
+  entityId  String?  @map("entity_id") @db.Uuid
+  branchId  String?  @map("branch_id") @db.Uuid
+  before    Json?    @map("before")
+  after     Json?    @map("after")
+  ip        String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  actor     User?    @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  branch    Branch?  @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, branchId, createdAt])
+  @@map("audit_logs")
+}

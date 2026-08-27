@@ -1,0 +1,11 @@
+{
+  "name": "@hris/ui-web",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  }
+}

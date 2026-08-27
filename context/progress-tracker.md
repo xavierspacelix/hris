@@ -1,6 +1,6 @@
 # Progress Tracker
 
-Active phase: **Prototype complete — UI context finalized**. Design system derived from the Figma HRDashboard kit; `ui-tokens.md`, `ui-rules.md`, `ui-registry.md` regenerated from it. Ready to start P0 (scaffold via CLI). Build order: **P0 shared → full Web Dashboard (P-W1…P-W7) → Mobile ESS last (P-M1…P-M7)**. Web is the primary deliverable first; mobile reuses the same API/schema. Screens defined in `web-screens.md` / `mobile-screens.md`.
+Active phase: **P0 Foundation — in progress**. Web P0 shell, settings, audit workspace, RBAC service layer, and CI are implemented. Mobile remains excluded from this work. Build order: **P0 shared → full Web Dashboard (P-W1…P-W7) → Mobile ESS last (P-M1…P-M7)**.
 
 ## Phase Status
 
@@ -9,7 +9,7 @@ Active phase: **Prototype complete — UI context finalized**. Design system der
 | Phase | Theme | Status | Notes |
 |---|---|---|---|
 | Planning | Context + design system + prototype | 🟢 done | design system from Figma; UI context regenerated |
-| P0 | Foundation | 🟡 next | scaffold via CLI; schema+RLS, auth, RBAC, tenant/branch, audit; **web shell + mobile shell** scaffold |
+| P0 | Foundation | 🟡 in progress | DB/RLS/auth scaffold exists; web shell/settings/audit and API RBAC service added. tRPC install remains blocked by Bun workspace resolution; mobile excluded by current scope. |
 
 ### Module Delivery — split by client surface
 

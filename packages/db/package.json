@@ -1,0 +1,24 @@
+{
+  "name": "@hris/db",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts",
+    "./generated/*": "./generated/*"
+  },
+  "scripts": {
+    "build": "prisma generate && tsc --noEmit",
+    "check-types": "prisma generate && tsc --noEmit",
+    "lint": "prisma validate",
+    "migrate:dev": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
+    "seed": "bun prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.3"
+  },
+  "devDependencies": {
+    "dotenv": "17.4.2",
+    "prisma": "6.19.3"
+  }
+}
