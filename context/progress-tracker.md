@@ -1,6 +1,6 @@
 # Progress Tracker
 
-Active phase: **Prototype complete — UI context finalized**. Design system derived from the Figma HRDashboard kit; `ui-tokens.md`, `ui-rules.md`, `ui-registry.md` regenerated from it. Ready to start P0 (scaffold via CLI). Build is tracked per **client surface**: **Web Dashboard** (HR admin / payroll admin / manager — Next.js) and **Mobile ESS** (employee self-service — Expo). Screens defined in `web-screens.md` / `mobile-screens.md`.
+Active phase: **Prototype complete — UI context finalized**. Design system derived from the Figma HRDashboard kit; `ui-tokens.md`, `ui-rules.md`, `ui-registry.md` regenerated from it. Ready to start P0 (scaffold via CLI). Build order: **P0 shared → full Web Dashboard (P-W1…P-W7) → Mobile ESS last (P-M1…P-M7)**. Web is the primary deliverable first; mobile reuses the same API/schema. Screens defined in `web-screens.md` / `mobile-screens.md`.
 
 ## Phase Status
 
@@ -13,7 +13,7 @@ Active phase: **Prototype complete — UI context finalized**. Design system der
 
 ### Module Delivery — split by client surface
 
-Legend: 🟢 done · 🟡 in progress · ⚪ not started. Web = dashboard (admin/payroll/manager), Mobile = ESS (employee).
+Build sequence: complete all **Web Dashboard** phases first, then **Mobile ESS** phases last. Legend: 🟢 done · 🟡 in progress · ⚪ not started. Web = dashboard (admin/payroll/manager), Mobile = ESS (employee).
 
 | Domain | Phase | Web Dashboard | Mobile ESS | Notes |
 |---|---|---|---|---|

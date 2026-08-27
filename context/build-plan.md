@@ -4,6 +4,14 @@ Phased build. Each phase produces visible, testable functionality before the nex
 
 Track legend: **[C]** shared/backend · **[W]** Web Dashboard (Next.js — HR admin / payroll admin / manager) · **[M]** Mobile ESS (Expo — employee self-service).
 
+## Build Order
+
+1. **P0 Foundation [C]** — monorepo, shared packages (`packages/db`, `packages/api`, `packages/ui-web`), auth, RBAC, tenant/branch, both client shells.
+2. **Full Web Dashboard [W]** — build every web phase sequentially: `P-W1` → `P-W7`. This is the primary deliverable first; it exercises the entire API + schema.
+3. **Mobile ESS [M]** — only after the web dashboard and shared API are stable, build `P-M1` → `P-M7`. Mobile reuses the same `packages/db` + `packages/api` already proven by web; it mirrors server-decided permissions and adds no admin writes.
+
+Web first, mobile last. Not parallel.
+
 ---
 
 ## Phase 0 — Foundation (shared) [C]
@@ -130,4 +138,4 @@ Mobile phases are built for the employee (scope `branch`) in Expo. Mobile **mirr
 | Mobile | P-M6 | Experience | 1 |
 | Mobile | P-M7 | Intelligence | 1 |
 
-Full feature coverage = sections A–T in `project-overview.md`. Web and Mobile tracks advance in parallel per domain once P0 is complete; both depend on the shared `packages/db` + `packages/api`.
+Full feature coverage = sections A–T in `project-overview.md`. Order: P0 (shared) → full Web Dashboard `P-W1`…`P-W7` → Mobile ESS `P-M1`…`P-M7` last. Both depend on the shared `packages/db` + `packages/api`.
