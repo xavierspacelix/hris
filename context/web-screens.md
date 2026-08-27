@@ -1,96 +1,320 @@
-# Web Screens — Full List (Prototype Instruction)
+# HRIS Admin Dashboard — Full OpenDesign Prototype Prompt
 
-All HR/admin/payroll/manager/BOD screens for the HRIS web app. Use this as the authoritative screen inventory when building the prototype. Build with mock data first (no backend), following `design-system.md` principles. The visual result from the user's design tool is the source of truth; `ui-tokens/rules/registry` will be regenerated from it afterward.
+Build a complete high-fidelity **mobile-first HRIS Admin Dashboard and Management Console** for HR administrators, payroll administrators, managers, business owners, and executives.
 
-Conventions:
-- Routes are under the tenant subdomain (`acme.hris.app/(tenant)/...`).
-- Cross-branch roles (owner/bod/hr_admin/payroll_admin) see a branch filter and consolidated data; branch-scoped roles (manager/employee) are locked to their branch.
-- Every list screen has loading, empty, error, and filtered states.
+This is the primary operational dashboard for managing:
 
-## Auth & Onboarding
-- `/(auth)/login` — email + password, SSO buttons (Google/Microsoft), forgot password.
-- `/(auth)/reset-password` — request + set new password.
-- `/(auth)/accept-invite` — set password + role claim after email invite.
-- `/(tenant)/onboarding` — tenant setup wizard: create org → add first branch → invite first HR admin (owner).
+* employees;
+* organizational structure;
+* attendance;
+* timesheets;
+* leave;
+* payroll;
+* benefits;
+* recruitment;
+* onboarding;
+* offboarding;
+* performance;
+* projects;
+* reporting;
+* workflows;
+* organization settings.
 
-## Dashboard
-- `/(tenant)/dashboard` — role-based home: stat cards (headcount, turnover, attendance, pending approvals), quick actions, announcements, cross-branch consolidated for scope=`all`.
+Use this document as the authoritative screen and workflow specification.
 
-## People
-- `/(tenant)/people` — employee list (search, filter, saved views, bulk import, branch filter for scope=`all`).
-- `/(tenant)/people/[id]` — employee profile with tabs: Personal, Contact & Emergency, Identity & Bank, Employment, Job Info, Compensation History, Documents, Custom Fields. Edit mode.
-- `/(tenant)/people/import` — CSV/Excel bulk import wizard.
+Build with realistic mock data first. Do not connect a backend yet.
 
-## Org Structure
-- `/(tenant)/org/departments` — department tree, edit, head assignment.
-- `/(tenant)/org/positions` — position/job-title catalog, grade ladder.
-- `/(tenant)/org/cost-centers` — cost/profit centers.
-- `/(tenant)/org/chart` — interactive org chart.
-- `/(tenant)/org/headcount` — plan vs actual per department/branch.
+Follow the principles in `design-system.md`, but treat the approved visual result produced by the design tool as the visual source of truth. `ui-tokens`, rules, registry, and implementation-level design tokens will be regenerated from the approved visual result afterward.
 
-## Time & Attendance
-- `/(tenant)/time/attendance` — clock-in/out log, GPS/photo indicators, filters.
-- `/(tenant)/time/timesheets` — timesheet list + detail, correction & approval.
-- `/(tenant)/time/shifts` — shift definitions, scheduling, swap.
-- `/(tenant)/time/overtime` — overtime requests + approval.
+The product is fundamentally a **desktop operational dashboard**, not a marketing website, employee mobile experience, or collection of disconnected CRUD pages.
 
-## Leave
-- `/(tenant)/leave/admin` — leave types, policies (accrual), balances overview.
-- `/(tenant)/leave/requests` — request list + approval (multi-level), conflict warnings.
-- `/(tenant)/leave/calendars` — holiday calendars per location.
+The objective is to create a coherent, production-grade enterprise dashboard that supports users who may spend several hours per day managing employees, reviewing exceptions, processing approvals, reconciling payroll, and analyzing organizational data.
 
-## Payroll
-- `/(tenant)/payroll/groups` — payroll groups & periods.
-- `/(tenant)/payroll/run` — pay run lifecycle: draft → review → approve → lock; component breakdown.
-- `/(tenant)/payroll/payslips` — payslip list + detail + PDF.
-- `/(tenant)/payroll/reimbursements` — reimbursement & loan list + status.
-- `/(tenant)/payroll/tax` — tax engine settings (country/regional).
+The result should feel like a mature business application intentionally designed around HR operations.
 
-## Benefits
-- `/(tenant)/benefits/plans` — benefit plans.
-- `/(tenant)/benefits/enrollments` — enrollments, life events, per-employee summary.
+---
 
-## Recruitment (ATS)
-- `/(tenant)/recruitment/requisitions` — requisitions + approval.
-- `/(tenant)/recruitment/posts` — job posts (internal/external), career page link.
-- `/(tenant)/recruitment/applicants` — pipeline board by stage, applicant detail.
-- `/(tenant)/recruitment/interviews` — schedule + panel + scorecards.
-- `/(tenant)/recruitment/offers` — offer generate/approve/sign.
+# 1. Dashboard Product Context
 
-## Onboarding
-- `/(tenant)/onboarding/templates` — checklist templates by dept/position.
-- `/(tenant)/onboarding/instances` — per-hire task tracking, probation reminder.
+This product is the administrative and management dashboard of a multi-tenant HRIS platform.
 
-## Offboarding
-- `/(tenant)/offboarding/instances` — resignation/termination workflow, checklist (IT/finance/HR), exit interview.
+Primary users include:
 
-## Performance
-- `/(tenant)/performance/goals` — goals cascade (org→team→individual).
-- `/(tenant)/performance/cycles` — review cycles (annual/quarter/360).
-- `/(tenant)/performance/reviews` — submit/approve reviews, calibration.
-- `/(tenant)/performance/feedback` — kudos/1:1 notes.
-- `/(tenant)/performance/talent` — nine-box / talent review.
-- `/(tenant)/performance/development` — IDP.
+* HR administrators;
+* payroll administrators;
+* managers;
+* business owners;
+* BOD / executives.
 
-## Project Module (Jira-like)
-- `/(tenant)/projects` — project list.
-- `/(tenant)/projects/[id]/board` — kanban board (drag status).
-- `/(tenant)/projects/[id]/backlog` — backlog + sprint planning.
-- `/(tenant)/projects/[id]/issues/[issueId]` — issue detail (comments, watchers, time log).
-- `/(tenant)/projects/[id]/roadmap` — epic timeline.
-- `/(tenant)/projects/[id]/reports` — burndown, velocity.
+Employees primarily use the separate Employee Self-Service mobile application.
 
-## Reporting & Analytics
-- `/(tenant)/reports` — executive dashboard (cross-branch for scope=`all`), metric tiles (headcount, turnover, diversity, absence, leave liability, comp cost, pipeline, performance).
-- `/(tenant)/reports/builder` — custom report builder + saved reports + export.
+This dashboard should therefore prioritize **administrative and managerial workflows**, not employee self-service.
 
-## Settings
-- `/(tenant)/settings/tenant` — name, logo, timezone, locale, currency, regional.
-- `/(tenant)/settings/branches` — branch CRUD, assign employees, per-branch settings.
-- `/(tenant)/settings/members` — invite user, assign role (+branch), member list.
-- `/(tenant)/settings/audit` — audit log viewer (read-only).
-- `/(tenant)/settings/notifications` — notification templates.
-- `/(tenant)/settings/workflows` — rule builder (trigger→condition→action).
+Users frequently perform tasks such as:
 
-## Screen states (every screen)
-Loading · Empty (with action) · Error (friendly ID) · Filtered/Search · Permission-denied (role gate) · Cross-branch branch picker (scope=`all` only).
+* finding employees;
+* comparing records;
+* reviewing attendance exceptions;
+* approving requests;
+* processing payroll;
+* correcting data;
+* monitoring onboarding;
+* reviewing recruitment pipelines;
+* analyzing organizational metrics;
+* configuring policies;
+* managing permissions.
+
+Design primarily for desktop and laptop environments.
+
+Assume typical working widths such as:
+
+* 1280px;
+* 1440px;
+* 1600px;
+* larger enterprise monitors.
+
+Responsive behavior should still be sensible, but do not compromise desktop information density merely to make every administrative workflow comfortable on a small phone.
+
+The dashboard should optimize for:
+
+* operational clarity;
+* information density;
+* fast scanning;
+* comparison;
+* bulk operations;
+* exception detection;
+* auditability;
+* predictable navigation;
+* low cognitive overhead.
+
+---
+
+# 2. Dashboard Design Direction
+
+The dashboard should feel:
+
+* professional;
+* calm;
+* precise;
+* mature;
+* trustworthy;
+* data-oriented;
+* operational;
+* contemporary without being trendy.
+
+It should support long work sessions without becoming visually exhausting.
+
+Prefer:
+
+* strong information hierarchy;
+* compact but readable layouts;
+* excellent tables;
+* useful filters;
+* clear status treatment;
+* meaningful grouping;
+* stable navigation;
+* contextual actions.
+
+Avoid designing the dashboard like:
+
+* a marketing SaaS website;
+* a fintech consumer app;
+* a mobile application enlarged to desktop size;
+* a portfolio piece designed primarily for screenshots;
+* a generic Tailwind admin template;
+* a collection of oversized cards.
+
+The dashboard should feel intentionally designed for professionals managing real HR operations.
+
+---
+
+# 3. Dashboard Composition Principles
+
+Do not interpret "dashboard" as:
+
+> KPI cards + chart grid.
+
+The product as a whole is an administrative dashboard, but individual screens should use the interaction pattern most appropriate to their workflow.
+
+For example:
+
+* People → data directory / workspace;
+* Attendance → operational exception table;
+* Payroll → financial reconciliation workspace;
+* Leave → request and approval workspace;
+* Recruitment → pipeline;
+* Performance → review and calibration workspace;
+* Reports → analytical dashboard;
+* Settings → configuration interface.
+
+Maintain a shared dashboard shell while allowing module-specific layouts.
+
+Use:
+
+> consistent application chrome + domain-appropriate workspaces.
+
+Do not use:
+
+> identical dashboard template on every route.
+
+---
+
+# 4. Dashboard Shell
+
+Establish a coherent global shell for the web application.
+
+It should provide:
+
+* primary navigation;
+* current module context;
+* tenant context;
+* branch scope where applicable;
+* user/account access;
+* notifications where relevant;
+* global or contextual search where justified.
+
+The shell should remain visually stable while users move between modules.
+
+Avoid excessive vertical chrome that reduces usable workspace.
+
+The main content area should prioritize operational information.
+
+Do not create oversized header regions that push actual data below the fold.
+
+For data-heavy screens, maximize useful vertical space.
+
+---
+
+# 5. Information Density
+
+This is a professional desktop dashboard.
+
+Information density should be higher than in the Employee Self-Service mobile application.
+
+Dense does not mean cramped.
+
+Use:
+
+* compact rows;
+* disciplined spacing;
+* clear typography;
+* alignment;
+* hierarchy;
+* progressive disclosure;
+
+to fit meaningful information without overwhelming the user.
+
+Avoid excessive padding that allows only a few records to fit on a normal laptop display.
+
+A payroll administrator should be able to compare many employees without scrolling through giant rows.
+
+An HR administrator should be able to scan meaningful portions of an employee directory at once.
+
+---
+
+# 6. Dashboard Metrics
+
+Metrics should exist because they support decisions.
+
+Do not automatically create a row of four KPI cards on every dashboard-like screen.
+
+A metric may instead appear as:
+
+* compact summary;
+* comparison strip;
+* table aggregate;
+* inline value;
+* trend;
+* exception counter;
+* chart;
+* dedicated KPI surface.
+
+Choose based on context.
+
+The primary `/dashboard` route may contain important organizational metrics, but it should also surface:
+
+* exceptions;
+* approvals;
+* tasks;
+* operational changes;
+* relevant announcements.
+
+The home dashboard should help users understand:
+
+> What requires my attention?
+
+not merely:
+
+> What numbers can we display?
+
+---
+
+# 7. Desktop-First Tables
+
+Tables are a core interaction pattern throughout the dashboard.
+
+Treat them as carefully designed product surfaces.
+
+Where relevant, support:
+
+* sticky headers;
+* sorting;
+* filters;
+* search;
+* saved views;
+* configurable columns;
+* row selection;
+* bulk operations;
+* pagination;
+* compact density;
+* contextual actions;
+* pinned identifiers.
+
+Avoid converting structured enterprise records into grids of cards merely to make the interface look more visual.
+
+Use tables particularly for:
+
+* employees;
+* attendance;
+* timesheets;
+* leave requests;
+* payroll;
+* reimbursements;
+* audit logs;
+* benefits enrollments;
+* report results.
+
+---
+
+# 8. Workspaces, Not Pages
+
+For complex workflows, think in terms of **workspaces**, not isolated screens.
+
+A workspace may combine:
+
+* list;
+* filters;
+* summary;
+* detail;
+* contextual actions;
+
+without forcing unnecessary navigation.
+
+Consider:
+
+* split views;
+* side panels;
+* drawers;
+* contextual detail panes;
+
+when they preserve useful context.
+
+Examples:
+
+An HR administrator reviewing an employee may benefit from keeping the employee directory context visible.
+
+A payroll administrator investigating a discrepancy may benefit from opening employee/component details without leaving the pay-run workspace.
+
+Do not overuse drawers or split panes simply because they are available.
+
+Use them when they reduce context switching.
