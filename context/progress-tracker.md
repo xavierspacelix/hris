@@ -1,13 +1,13 @@
 # Progress Tracker
 
-Active phase: **Planning & Context authoring** (design system + prototype plan). No code yet. Build phases (P0–P7) start after context approval; all scaffolding is CLI-driven (turbo / create-next-app / create-expo-app), never hand-written.
+Active phase: **Prototype complete — UI context finalized**. Design system derived from the Figma HRDashboard kit; `ui-tokens.md`, `ui-rules.md`, `ui-registry.md` regenerated from it. Ready to start P0 (scaffold via CLI), then build screens per `web-screens.md` / `mobile-screens.md` using the design system.
 
 ## Phase Status
 
 | Phase | Theme | Status | Notes |
 |---|---|---|---|
-| Planning | Context + design system + prototype plan | 🟡 in progress | authoring docs; UI prototype (mock data) comes next |
-| P0 | Foundation | ⚪ not started | scaffold via CLI, then schema+RLS, auth, RBAC, tenant/branch, shell, audit |
+| Planning | Context + design system + prototype | 🟢 done | design system from Figma; UI context regenerated |
+| P0 | Foundation | 🟡 next | scaffold via CLI, then schema+RLS, auth, RBAC, tenant/branch, shell, audit |
 | P1 | People | ⚪ not started | |
 | P2 | Time & Leave | ⚪ not started | |
 | P3 | Compensation | ⚪ not started | |
