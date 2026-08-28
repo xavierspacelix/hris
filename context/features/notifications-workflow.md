@@ -5,7 +5,7 @@ Deliver event-based notifications and let tenants automate routine processes.
 
 ## Notifications
 - `notifications` (tenant_id, user_id, type, payload jsonb, read_at|null).
-- Dispatcher service sends: in-app, email via nodemailer (SMTP), push via Expo.
+- Dispatcher service sends: in-app + email via nodemailer (SMTP).
 - Event emitters call dispatcher on leave/approval/payroll/onboarding/document-expiry.
 - Configurable templates; daily/weekly digest option.
 
@@ -21,6 +21,6 @@ Deliver event-based notifications and let tenants automate routine processes.
 - Failed notifications/webhooks retried with backoff, logged.
 
 ## Acceptance
-- Leave request sends in-app + email + push to approver.
+- Leave request sends in-app + email to approver.
 - A workflow rule auto-creates onboarding on hire.
 - Webhook fires to external URL on trigger.

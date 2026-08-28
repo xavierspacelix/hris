@@ -1,6 +1,8 @@
-# UI Rules
+# UI Rules — TEMPLATE
 
-Derived from `design-system.md` + `ui-tokens.md`. These are the binding rules for building HRIS UI (web + mobile). The visual design comes from the Figma HRDashboard kit.
+> **STATUS: TEMPLATE.** Placeholder structure to be filled in by the user from the design agent's output. Source of truth = `design-system.md`. The design agent regenerates the real rules into this file after the prototype is approved; current contents are not final.
+
+Derived from `design-system.md` + `ui-tokens.md`. Binding rules for building HRIS web UI. The visual design comes from the Figma HRDashboard kit.
 
 ## Tokens & styling
 
@@ -35,8 +37,7 @@ Derived from `design-system.md` + `ui-tokens.md`. These are the binding rules fo
 
 ## Responsive & mobile
 
-- Breakpoints 640/768/1024/1280/1536. Mobile: single column, collapsed nav, table overflow or alternate representation. Touch targets ~40–44px.
-- Expo app reuses the same tokens via theme object; components mirror web semantics.
+- Breakpoints 640/768/1024/1280/1536. Mobile (phone browser): single column, collapsed nav, table overflow or alternate representation. Touch targets ~40–44px.
 
 ## Accessibility & states
 

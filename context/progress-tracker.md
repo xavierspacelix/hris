@@ -1,44 +1,34 @@
 # Progress Tracker
 
-Active phase: **Prototype complete — UI context finalized**. Design system derived from the Figma HRDashboard kit; `ui-tokens.md`, `ui-rules.md`, `ui-registry.md` regenerated from it. Ready to start P0 (scaffold via CLI). Build order: **P0 shared → full Web Dashboard (P-W1…P-W7) → Mobile ESS last (P-M1…P-M7)**. Web is the primary deliverable first; mobile reuses the same API/schema. Screens defined in `web-screens.md` / `mobile-screens.md`.
+Active phase: **Prototype complete — UI context finalized**. Design system derived from the Figma HRDashboard kit; `ui-tokens.md`, `ui-rules.md`, `ui-registry.md` regenerated from it. Ready to start P0 (scaffold via CLI). Build order: **P0 shared → Web P1…P7** (single Next.js app; Employee Self-Service is a role-scoped surface inside the same app, delivered within each phase). Screens defined in `web-screens.md`.
 
 ## Phase Status
-
-### Foundation (shared backend + both client shells)
 
 | Phase | Theme | Status | Notes |
 |---|---|---|---|
 | Planning | Context + design system + prototype | 🟢 done | design system from Figma; UI context regenerated |
-| P0 | Foundation | 🟡 next | scaffold via CLI; schema+RLS, auth, RBAC, tenant/branch, audit; **web shell + mobile shell** scaffold |
+| P0 | Foundation | 🟡 next | scaffold via CLI; schema+RLS, auth, RBAC, tenant/branch, shell (incl. ESS entry), audit |
+| P1 | People (+ ESS profile/docs) | ⚪ not started | |
+| P2 | Time & Leave (+ ESS clock/leave) | ⚪ not started | |
+| P3 | Compensation (+ ESS payslip/benefits) | ⚪ not started | |
+| P4 | Talent (+ ESS onboarding/offboarding) | ⚪ not started | |
+| P5 | Performance (+ ESS goals/review) | ⚪ not started | |
+| P6 | Experience (Manager SS + Employee SS) | ⚪ not started | |
+| P7 | Intelligence (project + reports + notifications) | ⚪ not started | |
 
-### Module Delivery — split by client surface
-
-Build sequence: complete all **Web Dashboard** phases first, then **Mobile ESS** phases last. Legend: 🟢 done · 🟡 in progress · ⚪ not started. Web = dashboard (admin/payroll/manager), Mobile = ESS (employee).
-
-| Domain | Phase | Web Dashboard | Mobile ESS | Notes |
-|---|---|---|---|---|
-| People | P1 | ⚪ | ⚪ | web: employee/admin CRUD, org; mobile: my profile, my docs |
-| Time & Attendance | P2a | ⚪ | ⚪ | web: attendance rules, timesheets, corrections; mobile: clock-in/out, my timesheet |
-| Leave | P2b | ⚪ | ⚪ | web: leave admin + approvals; mobile: request leave, balances |
-| Compensation & Benefits | P3 | ⚪ | ⚪ | web: payroll run, benefits admin; mobile: payslips, benefit view (employee scope only) |
-| Talent (Recruit/Onboard/Offboard) | P4 | ⚪ | ⚪ | web: hiring pipeline, onboarding/offboarding workflows; mobile: onboarding tasks, candidate-free |
-| Performance | P5 | ⚪ | ⚪ | web: reviews, goals admin; mobile: my goals, submit self-review |
-| Experience (Manager SS / Docs / Projects) | P6 | ⚪ | ⚪ | web: manager dashboard, documents, Jira-like project module; mobile: team view, project tasks, docs |
-| Intelligence (Reporting / Notifications) | P7 | ⚪ | ⚪ | web: analytics dashboards; mobile: push/notification inbox |
+Build sequence: complete all web phases in order. Employee Self-Service screens are part of the same web app (no separate mobile client). Legend: 🟢 done · 🟡 in progress · ⚪ not started.
 
 ### Notes
-- No code exists yet. When build begins, scaffold via CLI: `bunx create-turbo` (monorepo), `bunx create-next-app apps/web`, `bunx create-expo-app apps/mobile`, then `packages/db`/`packages/api` as workspace packages.
-- Database schema + RLS design is specified in `context/features/01-database-tenant-branch-rls.md` and the foundation tables in `context/architecture.md`; implementation happens in P0 (shared).
-- Web Dashboard and Mobile ESS share `packages/db` + `packages/api`; they differ only in client (Next.js vs Expo) and RBAC scope (all-branch roles vs employee branch scope).
-- Mobile ESS never performs admin writes; it mirrors permissions decided server-side.
+- No code exists yet. When build begins, scaffold via CLI: `bunx create-turbo` (monorepo), `bunx create-next-app apps/web`, then `packages/db`/`packages/api` as workspace packages.
+- Database schema + RLS design is specified in `context/features/01-database-tenant-branch-rls.md` and the foundation tables in `context/architecture.md`; implementation happens in P0.
+- Employee Self-Service reuses `packages/db` + `packages/api`; it is server-scoped to the employee's own record + branch and performs no admin writes.
 
 ## Per-Feature Context
 
-Detailed specs live in `context/features/`. Tag: **[W]** web dashboard · **[M]** mobile ESS · **[C]** cross-cutting/shared.
+Detailed specs live in `context/features/`. Tag: **[W]** web (all roles, includes ESS surface) · **[C]** cross-cutting/shared.
 
 - P0 (shared): `00-monorepo-scaffold.md` [C], `01-database-tenant-branch-rls.md` [C], `02-authentication.md` [C], `03-rbac.md` [C], `04-tenant-branch-setup.md` [C], `05-app-shell-audit.md` [C]
-- Modules: `people.md` [W], `org-structure.md` [W], `documents.md` [C], `time-attendance.md` [W], `leave.md` [W], `benefits.md` [W], `payroll.md` [W], `recruitment.md` [W], `onboarding.md` [W], `offboarding.md` [W], `performance.md` [W], `manager-ss.md` [W], `employee-ss-mobile.md` [M], `project-module.md` [W], `reporting-analytics.md` [W], `notifications-workflow.md` [C]
-- Mobile ESS mirror specs (employee scope): `employee-ss-mobile.md` [M]; manager self-service on mobile reuses `manager-ss.md` semantics but is an [M] client.
+- Modules: `people.md` [W], `org-structure.md` [W], `documents.md` [W], `time-attendance.md` [W], `leave.md` [W], `benefits.md` [W], `payroll.md` [W], `recruitment.md` [W], `onboarding.md` [W], `offboarding.md` [W], `performance.md` [W], `manager-ss.md` [W], `employee-ss.md` [W], `project-module.md` [W], `reporting-analytics.md` [W], `notifications-workflow.md` [W]
 
 ## Blockers / Open Decisions
 

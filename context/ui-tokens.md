@@ -1,10 +1,12 @@
-# UI Tokens
+# UI Tokens — TEMPLATE
 
-Generated from `design-system.md` (Figma **HRDashboard — HR Management Dashboard UI Kit**). Source of truth = `design-system.md`; this file is the consumable token table. Use CSS variables on `:root` (web) and a matching theme object (mobile). Never hardcode values.
+> **STATUS: TEMPLATE.** This file is a placeholder structure to be filled in by the user from the design agent's output. Source of truth remains `design-system.md`. Once the prototype is approved, the design agent regenerates the real token values into this file; do not treat current contents as final.
+
+Generated from `design-system.md` (Figma **HRDashboard — HR Management Dashboard UI Kit**). Use CSS variables on `:root` (web). Never hardcode values.
 
 ## Typography
 
-Family: Manrope (web) / system fallback (mobile). Weights 400/500/600/700/800.
+Family: Manrope. Weights 400/500/600/700/800.
 
 | Token | Size | Weight | Use |
 |---|---:|---:|---|
@@ -105,6 +107,6 @@ Green: `0 0 0 2px rgba(39,163,118,0.10)` + `--primary-500` border.
 /* green semantics retained */
 ```
 
-## Mobile mapping
+## Mobile (responsive web)
 
-Map the same tokens to an RN theme object: `colors.primary`, `colors.textPrimary`, etc.; `spacing` scale; `radius`; `fontFamily: 'Manrope'`. Touch targets ~40–44px.
+The same tokens apply at phone/tablet widths via the responsive breakpoints. Touch targets ~40–44px. No separate theme object is needed (single web client).

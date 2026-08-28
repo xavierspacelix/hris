@@ -1,6 +1,6 @@
 # HRIS Agent Guide
 
-HRIS is a multi-tenant Human Resource Information System. It is a full-stack TypeScript product: a Next.js 16 web app for HR admins, payroll admins, and managers, and an Expo React Native mobile app for Employee Self-Service. A shared Prisma/PostgreSQL core and a shared API package back both clients. It is not a single-page demo; it is a product with hard tenant isolation, branch scoping, RBAC, payroll, recruitment, performance, and a Jira-like project module.
+HRIS is a multi-tenant Human Resource Information System. It is a full-stack TypeScript product: a Next.js 16 web app serving HR admins, payroll admins, managers, BOD, owners, and employees (Employee Self-Service). A shared Prisma/PostgreSQL core and a shared API package back the app. It is not a single-page demo; it is a product with hard tenant isolation, branch scoping, RBAC, payroll, recruitment, performance, and a Jira-like project module. Employee Self-Service is a role-scoped surface inside the same web app (not a separate client).
 
 ## Repository Layout
 
@@ -9,8 +9,7 @@ Monorepo at `/mnt/d/Source/hris`:
 ```text
 /
 ├── apps/
-│   ├── web/        → Next.js 16 (App Router, HR admin / payroll / manager)
-│   └── mobile/     → Expo React Native (Employee Self-Service, full)
+│   └── web/         → Next.js 16 (App Router, all roles incl. Employee Self-Service)
 ├── packages/
 │   ├── db/         → Prisma schema, migrations, tenant RLS, client extension
 │   ├── api/        → shared API contracts (tRPC routers + zod schemas)
@@ -22,10 +21,9 @@ Monorepo at `/mnt/d/Source/hris`:
 ## Development Command Environment
 
 - Repository lives at `/mnt/d/Source/hris` (Windows) and is reachable through WSL at the same path.
-- Node, Bun, and the React/Next/Expo toolchains run in WSL; use **Bun** for all installs and scripts.
+- Node, Bun, and the React/Next toolchains run in WSL; use **Bun** for all installs and scripts.
 - Prefer `bun` for installs, `turbo` for task orchestration (`build`, `lint`, `typecheck`, `dev`). Verify the executable and version before relying on it.
 - Database work uses Prisma CLI via `bunx prisma`; never hand-edit migration SQL unless an ADR says so.
-- Mobile uses Expo CLI. Run `bunx expo start` from `apps/mobile`.
 
 Example:
 
@@ -48,14 +46,8 @@ Read in this exact order:
 For web UI work (prototype & implementation), read before editing:
 
 1. `context/design-system.md` (principles only — the UI token/rule/registry files are regenerated from the approved prototype, do not read them as source of truth yet)
-2. `context/web-screens.md` (full screen list + build instruction)
+2. `context/web-screens.md` (full screen list + build instruction; includes admin, manager, and Employee Self-Service screens)
 3. `context/prototype-instructions.md`
-
-For mobile UI work, read before editing:
-
-1. `context/design-system.md` (principles only)
-2. `context/mobile-screens.md` (full screen list + build instruction)
-3. `context/release-update-rules.md`
 
 Do not read every feature spec by default. Confirm the active phase in `context/progress-tracker.md`, then read only the docs needed for that phase.
 
@@ -75,7 +67,7 @@ Do not read every feature spec by default. Confirm the active phase in `context/
 
 - Multi-tenant isolation is non-negotiable. Every query is scoped to `tenant_id`. PostgreSQL RLS is the last line of defense and must fail closed.
 - Branch scoping is enforced by the data layer. Roles with `scope: 'all'` (owner, bod, hr_admin, payroll_admin) see every branch; `scope: 'branch'` (manager, employee) see only their branch. The branch filter is applied automatically by the tenant/branch client extension, never by hand per query.
-- Authentication and authorization live on the server. The mobile and web clients only mirror permissions; they never decide access.
+- Authentication and authorization live on the server. The web client only mirrors permissions; it never decides access. Employee Self-Service is a server-scoped surface — employees see only their own, branch-scoped data.
 - Audit logging is mandatory for sensitive writes: employee records, compensation, payroll runs, role/permission changes, document access.
 - No hardcoded hex colors or raw Tailwind palette classes in components. Use CSS variables from `ui-tokens.md`.
 - Every commit message follows Conventional Commits 1.0.0.
@@ -83,23 +75,22 @@ Do not read every feature spec by default. Confirm the active phase in `context/
 - No cross-tenant data leakage, ever. One missed `tenant_id` filter is a severity-1 bug.
 - Secrets never enter logs, client bundles, or commits. Use environment variables and secret storage only.
 - Email uses SMTP (nodemailer). No external email SaaS.
-- Employee-side experience is mobile-first (Expo). HR/admin/manager experience is web (Next.js).
+- Employee Self-Service and all admin/managerial work happen in the same web app; there is no native mobile app. The web app is responsive for tablet/phone browsers.
 
 ## Scaffold Rules
 
-Never hand-write project or config files. Every `package.json`, `tsconfig.json`, `next.config.*`, `tailwind.config.*`, Expo/`app.json`, `turbo.json`, and lockfiles are produced by the official CLI, never by you.
+Never hand-write project or config files. Every `package.json`, `tsconfig.json`, `next.config.*`, `tailwind.config.*`, `turbo.json`, and lockfiles are produced by the official CLI, never by you.
 
 Setup commands (run from repo root):
 
 - Monorepo + turbo: `bunx create-turbo@latest` (or `bunx turbo init`) — generates root config and workspace wiring automatically.
 - Web app: `bunx create-next-app@latest apps/web --ts --app --tailwind --eslint --src-dir --import-alias "@/*"` (adjust flags to current Next 16 prompts).
-- Mobile app: `bunx create-expo-app@latest apps/mobile --template blank-typescript` then add Expo Router.
 - Shared package: `bunx create-turbo@latest` sub-package, or `bun init` only for a tiny internal lib.
 
 Rules:
 
 - After generation, only edit the generated files to fit HRIS; do not recreate config files by hand.
-- Generated files (`.next`, `node_modules`, `.expo`, `dist`, build output, lockfiles) are git-ignored.
+- Generated files (`.next`, `node_modules`, `dist`, build output, lockfiles) are git-ignored.
 - If a config file already exists because a CLI created it, edit it — do not delete and rewrite it manually.
 
 ## Dependency Rules
@@ -112,7 +103,7 @@ Before adding any third-party package:
 4. Confirm the existing stack is insufficient.
 5. Record the approved dependency and constraints in `library-docs.md`.
 
-Do not rely on training knowledge for Better Auth, Prisma, Next.js 16, Expo, tRPC, or PostgreSQL RLS when current docs are available.
+Do not rely on training knowledge for Better Auth, Prisma, Next.js 16, tRPC, or PostgreSQL RLS when current docs are available.
 
 ## Git Rules
 

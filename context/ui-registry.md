@@ -1,6 +1,8 @@
-# UI Registry
+# UI Registry — TEMPLATE
 
-Reusable component inventory for HRIS (web + mobile). Derived from `design-system.md`. Build each as a primitive with variants for visual/state differences; add a new component only when structure/semantics differ. Update this file (via `/imprint`) whenever a reusable component is added.
+> **STATUS: TEMPLATE.** Placeholder structure to be filled in by the user from the design agent's output. Source of truth = `design-system.md`. The design agent regenerates the real component inventory into this file after the prototype is approved; current contents are not final.
+
+Reusable component inventory for the HRIS web app. Derived from `design-system.md`. Build each as a primitive with variants for visual/state differences; add a new component only when structure/semantics differ. Update this file (via `/imprint`) whenever a reusable component is added.
 
 ## Primitives
 
@@ -28,19 +30,10 @@ Reusable component inventory for HRIS (web + mobile). Derived from `design-syste
 - **StatRow / MetricsGrid** — row of MetricCards.
 - **FilterToolbar** — search + selects + date range + status.
 - **TableCard** — Card wrapping a DataTable with toolbar.
-- **ChartCard** — white card + title + chart (Recharts web / RN-chart mobile).
+- **ChartCard** — white card + title + chart (Recharts).
 - **ApprovalRow** — item summary + Approve/Reject.
 - **EmptyState** — icon + title + one sentence + optional action.
 - **AuditRow** — actor + action + entity + time + diff.
-
-## Mobile (Expo) equivalents
-
-- **ScreenShell** — header + scroll body + bottom tabs.
-- **ProfileField** — read/edit.
-- **ClockButton** — in/out with GPS/photo.
-- **PayslipCard** — breakdown + PDF.
-- **LeaveRequestForm** — type/range/half-day/attachment.
-- **NotificationItem** — list row + deep link.
 
 ## Variants rule
 

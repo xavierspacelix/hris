@@ -9,7 +9,7 @@
 ## Formatting & Lint
 
 - Prettier with project config; single quotes, trailing commas, 2-space indent.
-- ESLint with `typescript-eslint` + `next` config for web, `expo` config for mobile.
+- ESLint with `typescript-eslint` + `next` config for web.
 - Maximum line length 100; files under 400 lines where practical (split by responsibility).
 - Run `turbo run lint` and `turbo run typecheck` before marking any phase complete.
 
@@ -24,7 +24,6 @@
 - `packages/db`: schema, migrations, RLS, scoped client extension. No HTTP, no UI.
 - `packages/api`: tRPC routers, Zod schemas, service-layer authorization. No React, no DB schema.
 - `apps/web`: pages + components. Data only via `packages/api`. No raw Prisma calls.
-- `apps/mobile`: screens + components. Data only via `packages/api`.
 
 Enforcement rule: components never query the database directly; API never returns cross-tenant/branch data.
 

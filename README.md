@@ -1,6 +1,6 @@
 # HRIS — Multi-Tenant Human Resource Information System
 
-A full-stack, multi-tenant HRIS: a Next.js web app for HR admins / payroll / managers / BOD, and an Expo React Native app for Employee Self-Service. One PostgreSQL database with hard tenant isolation (RLS) and branch-level scoping inside each tenant.
+A full-stack, multi-tenant HRIS delivered as a single Next.js web app for HR admins, payroll admins, managers, BOD/owners, and employees (Employee Self-Service). One PostgreSQL database with hard tenant isolation (RLS) and branch-level scoping inside each tenant. Responsive for tablet/phone browsers; no native mobile app.
 
 ## Status
 
@@ -8,8 +8,7 @@ Planning & context authoring. No application code yet. The UI prototype (mock da
 
 ## Stack (target)
 
-- Web: Next.js 16 (App Router) + TypeScript strict
-- Mobile: Expo React Native (Employee Self-Service)
+- Web: Next.js 16 (App Router) + TypeScript strict (all roles, including Employee Self-Service)
 - API: tRPC + Zod (shared contract)
 - DB: PostgreSQL + Prisma, tenant/branch RLS
 - Auth: Better Auth (email/password, SSO OIDC/SAML, MFA)
@@ -19,8 +18,7 @@ Planning & context authoring. No application code yet. The UI prototype (mock da
 ## Repository layout (planned)
 
 ```
-apps/web        Next.js (HR admin / payroll / manager / BOD)
-apps/mobile     Expo (Employee Self-Service)
+apps/web        Next.js (all roles: admin / payroll / manager / BOD / employee ESS)
 packages/db     Prisma schema, migrations, RLS, scoped client
 packages/api    tRPC routers, Zod schemas, RBAC
 packages/ui-web Shared web UI primitives
@@ -30,7 +28,7 @@ packages/ui-web Shared web UI primitives
 
 - **Tenant** = hard isolation boundary (`tenant_id` on every row; PostgreSQL RLS fails closed).
 - **Branch** = soft scope inside a tenant. Roles `owner`/`bod`/`hr_admin`/`payroll_admin` see all branches; `manager`/`employee` see only their branch.
-- Employees use the mobile app; administrators use the web app.
+- All users — including employees — use the same web app. Employees get the Employee Self-Service surface, scoped to their own, branch-scoped data.
 
 ## Context docs
 
@@ -39,13 +37,13 @@ packages/ui-web Shared web UI primitives
 - `context/architecture.md` — stack, multi-tenancy, RLS, RBAC, project module
 - `context/build-plan.md` — phases P0–P7
 - `context/design-system.md` + `context/prototype-instructions.md` — design & prototype workflow
-- `context/web-screens.md` / `context/mobile-screens.md` — full screen inventory
-- `context/versioning.md` / `context/release-update-rules.md` — versioning & mobile release
+- `context/web-screens.md` — full screen inventory (admin + manager + Employee Self-Service)
+- `context/versioning.md` — versioning
 - `context/features/` — per-feature specifications
 
 ## Development
 
-Scaffolding is CLI-driven (never hand-written config): `bunx create-turbo`, `bunx create-next-app apps/web`, `bunx create-expo-app apps/mobile`.
+Scaffolding is CLI-driven (never hand-written config): `bunx create-turbo`, `bunx create-next-app apps/web`.
 
 ## License
 
