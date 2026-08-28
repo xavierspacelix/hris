@@ -12,7 +12,8 @@ Last updated: 2026-08-28
 ## Decisions made
 
 - **No native mobile app.** HRIS is one responsive Next.js 16 web app. Employee Self-Service is a role-scoped surface inside the same app (`/(tenant)/me`), server-scoped to the employee's own record + branch.
-- Icon library = Lucide. Build order: P0 shared → Web P1…P7 (ESS features delivered within each phase).
+- Icon library = Lucide.
+- **Build approach = UI-first, wire later.** P0 = scaffold monorepo + build the FULL UI on typed mock data (all screens, all roles). Real `packages/api` (tRPC) + `packages/db` (Prisma/RLS) implemented in a separate **Wiring** pass AFTER the UI is approved. Mock shapes match feature specs so swap is mechanical.
 - Stack (web-only): Next 16 + tRPC + Prisma/PostgreSQL RLS + Better Auth + Tailwind/shadcn + BullMQ/Redis + Recharts + nodemailer(SMTP) + S3. Bun + Turborepo; CLI-only scaffolding.
 
 ## Problems solved
@@ -26,11 +27,13 @@ Last updated: 2026-08-28
 
 ## Next session starts with
 
-- Start **P0 Foundation** scaffold via CLI (network/installs needed):
-  1. `bunx create-turbo@latest` (monorepo + turbo)
-  2. `bunx create-next-app@latest apps/web --ts --app --tailwind --eslint --src-dir --import-alias "@/*"`
-  3. `packages/db` (Prisma + RLS), `packages/api` (tRPC), `packages/ui-web` (shadcn)
-- Awaiting user go-ahead before running (large installs).
+- Start **P0: Scaffold + Full UI (mock data)** via CLI (network/installs needed):
+  1. `bunx create-turbo@latest` (monorepo + turbo) at repo root.
+  2. `bunx create-next-app@latest apps/web --ts --app --tailwind --eslint --src-dir --import-alias "@/*"`.
+  3. Empty workspace packages: `packages/ui-web` (shadcn), `packages/db`, `packages/api` (logic deferred to Wiring pass).
+  4. Apply design tokens (CSS variables from `design-system.md`), build app shell, then implement every screen (admin/manager/ESS) from `web-screens.md` using typed mocks.
+- Do NOT write API/DB logic yet — that is the later Wiring pass.
+- Awaiting user go-ahead before running scaffold (large installs).
 
 ## Open questions
 

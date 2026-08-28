@@ -1,13 +1,13 @@
 # Progress Tracker
 
-Active phase: **Prototype complete — UI context finalized**. Design system derived from the Figma HRDashboard kit; `ui-tokens.md`, `ui-rules.md`, `ui-registry.md` regenerated from it. Ready to start P0 (scaffold via CLI). Build order: **P0 shared → Web P1…P7** (single Next.js app; Employee Self-Service is a role-scoped surface inside the same app, delivered within each phase). Screens defined in `web-screens.md`.
+Active phase: **Start P0 — Scaffold + Full UI (mock data)**. Design system finalized; `ui-tokens/ui-rules/ui-registry` are templates to fill from the design agent. P0 builds the monorepo + every screen (admin, manager, employee ESS) on typed mock data. Real API/DB wiring is deferred to a later **Wiring** pass after the UI is approved. Screens defined in `web-screens.md`; approach in `build-plan.md` ("UI-first, wire later").
 
 ## Phase Status
 
 | Phase | Theme | Status | Notes |
 |---|---|---|---|
 | Planning | Context + design system + prototype | 🟢 done | design system from Figma; UI context regenerated |
-| P0 | Foundation | 🟡 next | scaffold via CLI; schema+RLS, auth, RBAC, tenant/branch, shell (incl. ESS entry), audit |
+| P0 | Scaffold + Full UI (mock) | 🟡 next | scaffold via CLI; install deps; tokens; app shell; build ALL screens on mock data (no API/DB yet) |
 | P1 | People (+ ESS profile/docs) | ⚪ not started | |
 | P2 | Time & Leave (+ ESS clock/leave) | ⚪ not started | |
 | P3 | Compensation (+ ESS payslip/benefits) | ⚪ not started | |
@@ -19,9 +19,9 @@ Active phase: **Prototype complete — UI context finalized**. Design system der
 Build sequence: complete all web phases in order. Employee Self-Service screens are part of the same web app (no separate mobile client). Legend: 🟢 done · 🟡 in progress · ⚪ not started.
 
 ### Notes
-- No code exists yet. When build begins, scaffold via CLI: `bunx create-turbo` (monorepo), `bunx create-next-app apps/web`, then `packages/db`/`packages/api` as workspace packages.
-- Database schema + RLS design is specified in `context/features/01-database-tenant-branch-rls.md` and the foundation tables in `context/architecture.md`; implementation happens in P0.
-- Employee Self-Service reuses `packages/db` + `packages/api`; it is server-scoped to the employee's own record + branch and performs no admin writes.
+- No code exists yet. P0 scaffolds via CLI: `bunx create-turbo` (monorepo), `bunx create-next-app apps/web`, and empty `packages/db` / `packages/api` / `packages/ui-web` workspace packages. P0 builds UI only — screens use typed mocks.
+- Real backend (`packages/api` tRPC + `packages/db` Prisma/RLS) is implemented in the **Wiring** pass after UI approval. Schema + RLS design lives in `context/features/01-database-tenant-branch-rls.md` and `context/architecture.md`.
+- Employee Self-Service reuses the same components/API; it is server-scoped to the employee's own record + branch and performs no admin writes (enforced in the Wiring pass).
 
 ## Per-Feature Context
 

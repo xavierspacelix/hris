@@ -4,6 +4,15 @@ Phased build. Each phase produces visible, testable functionality before the nex
 
 Track legend: **[C]** shared/backend · **[W]** Web (all roles — admin / payroll / manager / BOD / employee ESS).
 
+## Build Approach — UI-first, wire later
+
+The build starts with **scaffold + the full UI on mock data**, then wires real backend afterward:
+
+1. **P0 — Scaffold + Full UI**: create the monorepo (`apps/web`, `packages/db`, `packages/api`, `packages/ui-web`) via CLI, install deps, apply design tokens, build the app shell, and implement **every screen for all roles** (admin, manager, employee ESS) using typed mock fixtures. The UI is reviewable end-to-end before any backend exists.
+2. **Wiring Pass (post-UI)**: only after the UI is approved, implement `packages/api` (tRPC routers + Zod + RBAC) and `packages/db` (Prisma schema + tenant/branch RLS + scoped client), then swap each screen's mock data source for the real API. Mock fixture shapes are defined to match the feature specs so the swap is mechanical.
+
+During the UI phase no `packages/api`/`packages/db` logic is written — screens import from a `mocks/` module only. This keeps the prototype independent of backend and lets design review happen early.
+
 ---
 
 ## Phase 0 — Foundation (shared) [C]
@@ -92,7 +101,7 @@ Every web phase builds both the administrative/managerial screens and the corres
 
 | Track | Phase | Theme | Features |
 |---|---|---|---|
-| Shared | P0 | Foundation | 6 |
+| Shared | P0 | Scaffold + Full UI (mock data) | monorepo, shell, all screens |
 | Web | P1 | People (+ ESS profile/docs) | 3 + ESS |
 | Web | P2 | Time & Leave (+ ESS clock/leave) | 2 + ESS |
 | Web | P3 | Compensation (+ ESS payslip/benefits) | 2 + ESS |
@@ -100,5 +109,6 @@ Every web phase builds both the administrative/managerial screens and the corres
 | Web | P5 | Performance (+ ESS goals/review) | 1 + ESS |
 | Web | P6 | Experience (Manager SS + Employee SS) | 2 |
 | Web | P7 | Intelligence (project + reports + notifications) | 3 |
+| Backend | Wiring | Connect `packages/api` + `packages/db` + RLS | swap mocks → real data |
 
-Full feature coverage = sections A–T in `project-overview.md`. Web is the single client; build P0 → P1 → … → P7 sequentially. Employee Self-Service screens are delivered within the same phases that introduce the underlying feature.
+Full feature coverage = sections A–T in `project-overview.md`. Web is the single client. Build P0 → P1 → … → P7 as **UI on mock data**; Employee Self-Service screens are delivered within the same phases. After the UI is approved, run the **Wiring** pass to connect real API/DB.
