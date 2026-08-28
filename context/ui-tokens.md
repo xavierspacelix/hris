@@ -1,6 +1,8 @@
-# UI Tokens
+# UI Tokens — TEMPLATE
 
-Generated from `design-system.md` (Figma **HRDashboard — HR Management Dashboard UI Kit**). Source of truth = `design-system.md`; this file is the consumable token table. Use CSS variables on `:root` (web) and a matching theme object (mobile). Never hardcode values.
+> **STATUS: TEMPLATE.** This file is a placeholder structure to be filled in by the user from the design agent's output. Source of truth remains `design-system.md`. Once the prototype is approved, the design agent regenerates the real token values into this file; do not treat current contents as final.
+
+Generated from `design-system.md` (Figma **HRDashboard — HR Management Dashboard UI Kit**). Use CSS variables on `:root` (web). Never hardcode values.
 
 ## Typography
 

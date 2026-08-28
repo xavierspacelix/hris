@@ -1,4 +1,6 @@
-# UI Registry
+# UI Registry — TEMPLATE
+
+> **STATUS: TEMPLATE.** Placeholder structure to be filled in by the user from the design agent's output. Source of truth = `design-system.md`. The design agent regenerates the real component inventory into this file after the prototype is approved; current contents are not final.
 
 Reusable component inventory for the HRIS web app. Derived from `design-system.md`. Build each as a primitive with variants for visual/state differences; add a new component only when structure/semantics differ. Update this file (via `/imprint`) whenever a reusable component is added.
 
