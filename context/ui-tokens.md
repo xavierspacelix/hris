@@ -4,7 +4,7 @@ Generated from `design-system.md` (Figma **HRDashboard — HR Management Dashboa
 
 ## Typography
 
-Family: Manrope (web) / system fallback (mobile). Weights 400/500/600/700/800.
+Family: Manrope. Weights 400/500/600/700/800.
 
 | Token | Size | Weight | Use |
 |---|---:|---:|---|
@@ -105,6 +105,6 @@ Green: `0 0 0 2px rgba(39,163,118,0.10)` + `--primary-500` border.
 /* green semantics retained */
 ```
 
-## Mobile mapping
+## Mobile (responsive web)
 
-Map the same tokens to an RN theme object: `colors.primary`, `colors.textPrimary`, etc.; `spacing` scale; `radius`; `fontFamily: 'Manrope'`. Touch targets ~40–44px.
+The same tokens apply at phone/tablet widths via the responsive breakpoints. Touch targets ~40–44px. No separate theme object is needed (single web client).

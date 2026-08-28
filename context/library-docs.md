@@ -8,7 +8,6 @@ Approved dependencies. Add an entry before using any new third-party package. Ve
 |---|---|---|---|
 | next | 16.x | Web framework (App Router) | App Router only; no pages router |
 | react | 19.x | UI | strict mode on |
-| react-native / expo | SDK 52+ | Mobile ESS | Expo managed workflow |
 | typescript | 5.x | Language | strict everywhere |
 
 ## API / Data
@@ -16,7 +15,7 @@ Approved dependencies. Add an entry before using any new third-party package. Ve
 | Package | Version (target) | Purpose | Constraints |
 |---|---|---|---|
 | @trpc/server, @trpc/client, @trpc/react-query | 11.x | Shared API contract | Routers live in `packages/api` |
-| @trpc/next, @trpc/expo | 11.x | Client adapters | |
+| @trpc/next | 11.x | Client adapter | |
 | zod | 3.x | Validation | All inputs at API boundary |
 | @prisma/client, prisma | 6.x | ORM + migrations | RLS via migrations; client extension for scoping |
 | pg | 8.x | Native pg for RLS context (`SET LOCAL`) | Used inside `packages/db` only |
@@ -39,14 +38,6 @@ Approved dependencies. Add an entry before using any new third-party package. Ve
 | recharts | 2.x | Charts | |
 | @tanstack/react-query | 5.x | Client data cache | Used with tRPC react adapter |
 
-## UI (mobile)
-
-| Package | Version (target) | Purpose | Constraints |
-|---|---|---|---|
-| react-native-paper / tamagui | TBD | Components | Decide in P0/P6 |
-| expo-notifications | SDK | Push | |
-| @tanstack/react-query | 5.x | Client cache | |
-
 ## Jobs / Infra
 
 | Package | Version (target) | Purpose | Constraints |
@@ -60,4 +51,4 @@ Approved dependencies. Add an entry before using any new third-party package. Ve
 ## Notes
 
 - Do not add a dependency without recording it here and confirming the existing stack is insufficient.
-- Prefer official docs over training memory for Better Auth, Prisma 6, Next 16, Expo SDK 52, tRPC 11, PostgreSQL RLS.
+- Prefer official docs over training memory for Better Auth, Prisma 6, Next 16, tRPC 11, PostgreSQL RLS.

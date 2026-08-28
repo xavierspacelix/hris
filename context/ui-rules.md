@@ -35,8 +35,7 @@ Derived from `design-system.md` + `ui-tokens.md`. These are the binding rules fo
 
 ## Responsive & mobile
 
-- Breakpoints 640/768/1024/1280/1536. Mobile: single column, collapsed nav, table overflow or alternate representation. Touch targets ~40–44px.
-- Expo app reuses the same tokens via theme object; components mirror web semantics.
+- Breakpoints 640/768/1024/1280/1536. Mobile (phone browser): single column, collapsed nav, table overflow or alternate representation. Touch targets ~40–44px.
 
 ## Accessibility & states
 

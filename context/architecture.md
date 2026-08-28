@@ -4,18 +4,16 @@
 
 | Layer | Technology | Responsibility |
 |---|---|---|
-| Web | Next.js 16 (App Router) + TypeScript strict | HR admin / payroll / manager UI, server components, API routes |
-| Mobile | Expo React Native + TypeScript | Employee Self-Service |
-| API | tRPC (or Next route handlers) + Zod | Shared contract between web, mobile, server |
+| Web | Next.js 16 (App Router) + TypeScript strict | All roles (HR admin / payroll / manager / BOD / employee ESS), server components, API routes |
+| API | tRPC (or Next route handlers) + Zod | Shared contract between client and server |
 | DB | PostgreSQL | Single shared database, shared schema, `tenant_id` + `branch_id` |
 | ORM | Prisma | Migrations, tenant/branch client extension, RLS context |
 | Auth | Better Auth | Email/password, SSO OIDC/SAML, MFA, org/tenant membership |
 | UI (web) | Tailwind CSS + shadcn/ui | Web components, CSS-variable tokens |
-| UI (mobile) | React Native + Tamagui/NativeBase or custom | Mobile components |
 | Jobs | BullMQ + Redis | Async payroll, notifications, imports |
-| Realtime | Expo push + web sockets (optional) | Notifications |
+| Realtime | Web sockets (optional) | Notifications |
 | Email | nodemailer (SMTP) | Transactional email only |
-| Charts | Recharts (web) | Analytics |
+| Charts | Recharts | Analytics |
 | Storage | S3-compatible object storage | Documents, payslips, attachments |
 
 Exact third-party package versions must be recorded in `library-docs.md` before use.
@@ -25,28 +23,25 @@ Exact third-party package versions must be recorded in `library-docs.md` before 
 ```text
 /
 ├── apps/
-│   ├── web/                 → Next.js 16 (App Router)
-│   │   ├── app/
-│   │   │   ├── (auth)/
-│   │   │   ├── (tenant)/
-│   │   │   │   ├── dashboard/
-│   │   │   │   ├── people/
-│   │   │   │   ├── org/
-│   │   │   │   ├── time/
-│   │   │   │   ├── leave/
-│   │   │   │   ├── payroll/
-│   │   │   │   ├── benefits/
-│   │   │   │   ├── recruitment/
-│   │   │   │   ├── onboarding/
-│   │   │   │   ├── performance/
-│   │   │   │   ├── projects/
-│   │   │   │   ├── reports/
-│   │   │   │   └── settings/
-│   │   │   └── api/
-│   │   ├── components/
-│   │   └── lib/
-│   └── mobile/              → Expo app (Employee Self-Service)
-│       ├── app/             → screens (file-based or stack)
+│   └── web/                 → Next.js 16 (App Router)
+│       ├── app/
+│       │   ├── (auth)/
+│       │   ├── (tenant)/
+│       │   │   ├── dashboard/
+│       │   │   ├── people/
+│       │   │   ├── org/
+│       │   │   ├── time/
+│       │   │   ├── leave/
+│       │   │   ├── payroll/
+│       │   │   ├── benefits/
+│       │   │   ├── recruitment/
+│       │   │   ├── onboarding/
+│       │   │   ├── performance/
+│       │   │   ├── projects/
+│       │   │   ├── reports/
+│       │   │   ├── me/            → Employee Self-Service surface
+│       │   │   └── settings/
+│       │   └── api/
 │       ├── components/
 │       └── lib/
 ├── packages/
@@ -108,7 +103,7 @@ Every hot query leads its index with `tenant_id` (and `branch_id` where relevant
 - Login returns a session. A middleware resolves `(tenantId, userId, role, scope, branchId)` from the session and the `Host` subdomain.
 - SSO (OIDC/SAML) maps IdP groups to tenant roles per tenant (just-in-time at login, continuously via SCIM).
 - MFA enforced per tenant policy.
-- Protected web routes under `/(tenant)/*`; mobile uses a bearer token from the same auth.
+- Protected web routes under `/(tenant)/*`; Employee Self-Service lives under `/(tenant)/me/*` and is server-scoped to the employee's own record + branch.
 
 ## Project Module (Jira-like, web)
 
@@ -121,19 +116,17 @@ Every hot query leads its index with `tenant_id` (and `branch_id` where relevant
 ## Data Flow
 
 ### UI mutation (web)
+
 ```
 User action → tRPC mutation → service layer (RBAC check) → Prisma scoped client → DB
 ```
 
-### Mobile mutation
-```
-Expo screen → tRPC client (bearer) → same service layer → scoped client → DB
-```
-
 ### Async job
+
 ```
 Trigger (e.g. payroll run) → enqueue BullMQ → worker sets tenant/branch context → job runs → audit log
 ```
+
 Jobs carry `tenantId`/`branchId` in their payload; the worker re-establishes DB context before any query.
 
 ## Email (SMTP)
@@ -143,8 +136,8 @@ Jobs carry `tenantId`/`branchId` in their payload; the worker re-establishes DB 
 ## Notifications
 
 - `notifications` table (in-app, tenant-scoped).
-- Dispatcher service sends email (SMTP) and, for mobile, Expo push tokens stored per employee.
-- Event emitters call the dispatcher; templates are tenant-configurable.
+- Dispatcher service sends email (SMTP) and in-app notifications. Event emitters call the dispatcher; templates are tenant-configurable.
+- No mobile push (no native app); employees receive in-app + email.
 
 ## Object Storage
 

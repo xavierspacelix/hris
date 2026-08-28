@@ -46,7 +46,7 @@ Primary users include:
 * business owners;
 * BOD / executives.
 
-Employees primarily use the separate Employee Self-Service mobile application.
+Employees use the Employee Self-Service surface within this same web app (scoped to their own data).
 
 This dashboard should therefore prioritize **administrative and managerial workflows**, not employee self-service.
 
@@ -189,7 +189,7 @@ For data-heavy screens, maximize useful vertical space.
 
 This is a professional desktop dashboard.
 
-Information density should be higher than in the Employee Self-Service mobile application.
+Information density should be higher than in the Employee Self-Service surface.
 
 Dense does not mean cramped.
 
@@ -318,3 +318,34 @@ A payroll administrator investigating a discrepancy may benefit from opening emp
 Do not overuse drawers or split panes simply because they are available.
 
 Use them when they reduce context switching.
+
+---
+
+# 9. Employee Self-Service (Web)
+
+Employee Self-Service is a role-scoped surface inside the same web app (route group `/(tenant)/me`). It reuses the dashboard shell, tokens, and components. Density and interaction patterns match the admin dashboard, but the data is automatically scoped to the employee's own record and branch. Employees never see administrative controls or other employees' data.
+
+Primary users: employees performing personal HR tasks. Sessions are short and frequent (clock in, request leave, check payslip), but the surface is still a web dashboard — not a separate mobile app.
+
+### ESS screens (build within the phase that introduces the feature)
+
+- **Home (`/me`)** — personal summary: upcoming/absence, pending approvals on my requests, my attendance today, announcements.
+- **My Profile** — view + edit permitted partial fields; photo.
+- **My Org & Colleagues** — read-only org chart slice + colleague search.
+- **My Attendance** — clock in/out (GPS/photo per policy), my timesheet, corrections.
+- **My Leave** — request, balances, history, cancel.
+- **My Overtime** — request + status.
+- **My Payslips** — list, view, PDF download.
+- **My Benefits** — summary + enrollment + life events.
+- **My Goals & Reviews** — goals, submit self-review, feedback/IDP.
+- **My Documents** — personal vault view/download.
+- **My Reimbursements / Loans** — request + status.
+- **Announcements & Newsfeed** — tenant-scoped.
+- **Helpdesk** — optional chat hook.
+
+### ESS rules
+
+- All reads auto-scoped to the employee's tenant + branch + own record (server-enforced).
+- No admin writes; request submissions flow through the same API routers with employee scope.
+- Reuse `PageHeader`, `Card`, `DataTable`, `Modal`, `StatusChip`, `Avatar` from the shared registry — do not fork mobile-specific components.
+- Responsive: the same components adapt to phone/tablet browsers; no separate layout system.

@@ -289,7 +289,7 @@ Green `#27A376` retained (may lighten for contrast). Avoid pure black.
 
 Same component language across breakpoints. Desktop: persistent sidebar, multi-column, dense tables. Tablet: collapsible sidebar, reduced grid, kept cards. Mobile: single column, collapsed nav, horizontal table overflow or alternate representation, touch-friendly. Breakpoints: 640/768/1024/1280/1536px.
 
-## 34. Mobile Touch Targets
+## 34. Touch Targets
 
 Min interactive area 40–44px; visible icon may stay 18–24px.
 

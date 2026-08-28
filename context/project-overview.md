@@ -2,23 +2,22 @@
 
 ## Product
 
-HRIS is a multi-tenant Human Resource Information System. A single deployed instance serves many organizations (tenants). Inside each tenant, the organization can operate multiple branches (cabang); some roles see every branch, others see only their own. The system covers the full employee lifecycle: people data, org structure, time & attendance, leave, payroll, benefits, recruitment, onboarding, performance, offboarding, plus a Jira-like project module (web), and a full Employee Self-Service mobile app.
+HRIS is a multi-tenant Human Resource Information System. A single deployed instance serves many organizations (tenants). Inside each tenant, the organization can operate multiple branches (cabang); some roles see every branch, others see only their own. The system covers the full employee lifecycle: people data, org structure, time & attendance, leave, payroll, benefits, recruitment, onboarding, performance, offboarding, plus a Jira-like project module, and a full Employee Self-Service surface — all delivered through one responsive Next.js web app.
 
-Two clients share one backend:
-- **Web** (Next.js 16): HR admin, payroll admin, owner, BOD, manager self-service.
-- **Mobile** (Expo React Native): Employee Self-Service, full-featured.
+One client, all roles:
+
+- **Web** (Next.js 16): HR admin, payroll admin, owner, BOD, manager self-service, and employee self-service. Employee Self-Service is a role-scoped surface (under `/(tenant)/me`) showing only the employee's own, branch-scoped data.
 
 ## Target User
 
 - HR administrators and payroll administrators who run workforce operations for one or many branches.
 - Owners and board members (BOD) who need cross-branch visibility and executive analytics.
 - Managers who approve leave/timesheets and run team reviews.
-- Employees who self-serve from a mobile app: view profile, clock in/out, request leave, view payslips, track goals.
+- Employees who self-serve from the web app: view profile, clock in/out, request leave, view payslips, track goals.
 
 ## Platform
 
-- Web: Next.js 16 App Router, deployed as a single multi-tenant instance.
-- Mobile: Expo React Native (iOS + Android), Expo Application Services for builds.
+- Web: Next.js 16 App Router, deployed as a single multi-tenant instance. Responsive for desktop, tablet, and phone browsers.
 - Database: PostgreSQL (managed, e.g. Neon/Aurora/RDS).
 - Runtime: Node.js (web server, API, background workers).
 - Account model: per-tenant accounts, no global consumer accounts.
@@ -31,7 +30,7 @@ Two clients share one backend:
 2. Branch scoping is automatic. A branch-scoped user never sees another branch's data without an explicit, audited elevation.
 3. Authorization is server-decided. Clients mirror permissions; they never grant them.
 4. Audit everything sensitive. Employee PII, compensation, payroll, roles, and document access are logged immutably.
-5. Mobile-first for employees, web-first for administrators.
+5. Web-first for everyone; responsive for tablet/phone browsers. Employee Self-Service is a scoped surface in the same web app, not a separate client.
 6. Email is SMTP only. No third-party email SaaS.
 7. Safe defaults. RLS fails closed; missing tenant/branch context returns nothing.
 8. No hardcoded styling tokens. Components consume CSS variables from `ui-tokens.md`.
@@ -113,7 +112,7 @@ Custom tenant roles can be added later by cloning a template role and editing th
 - Document access audit
 
 ### F. Time & Attendance
-- Clock in/out (mobile GPS, web)
+- Clock in/out (web; GPS/photo verification per policy)
 - Timesheet (manual + auto from attendance)
 - Shift scheduling (rotation, shift swap)
 - Overtime request & approval
@@ -139,7 +138,7 @@ Custom tenant roles can be added later by cloning a template role and editing th
 - Payroll group & period (monthly/weekly)
 - Components: earnings, deductions, taxes
 - Tax engine (country-specific, e.g. PPh21 + BPJS for Indonesia; extensible)
-- Payslip generation & distribution (web + mobile)
+- Payslip generation & distribution (web)
 - Pay run lifecycle: draft → review → approve → lock
 - Bonus, THR, severance
 - Reimbursement & loan (salary deduction)
@@ -198,8 +197,8 @@ Custom tenant roles can be added later by cloning a template role and editing th
 - Final settlement via payroll
 - Rehire flag & alumni
 
-### N. Employee Self-Service (Mobile — Expo, full)
-- Login + MFA + push notifications
+### N. Employee Self-Service (Web, full)
+- Login + MFA
 - View & edit own profile (partial fields)
 - Org chart & colleagues view
 - Clock in/out & timesheet
@@ -261,7 +260,7 @@ Custom tenant roles can be added later by cloning a template role and editing th
 - Access log & IP recording
 
 ### S. Notifications
-- In-app + email (SMTP) + mobile push (Expo)
+- In-app + email (SMTP)
 - Event-based: leave, approval, payroll, onboarding, document expiry
 - Configurable templates
 - Daily/weekly digest
@@ -289,15 +288,16 @@ Custom tenant roles can be added later by cloning a template role and editing th
 /(tenant)/projects      → Project module (Jira-like)
 /(tenant)/reports       → Reporting & analytics
 /(tenant)/settings      → Tenant, branch, RBAC, audit
+/(tenant)/me            → Employee Self-Service (scoped to the employee)
 ```
 
-Mobile (Expo) is the Employee Self-Service surface described in section N.
+Employee Self-Service is a scoped web surface (section N); it reuses the same shell, components, and API as the admin views.
 
 ## Out Of Scope
 
 - Billing, plan tiers, or subscription management.
 - External email SaaS (SMTP only).
-- Native desktop app (web + mobile only).
+- Native desktop or mobile apps (web only; responsive for tablet/phone browsers).
 - Third-party payroll provider auto-submission (journal out, not submission).
 
 ## Success Criteria
@@ -305,7 +305,7 @@ Mobile (Expo) is the Employee Self-Service surface described in section N.
 - A new tenant can sign up, create branches, invite users, and manage employees within minutes.
 - No cross-tenant or cross-branch read is possible through UI, API, or raw SQL path.
 - HR admin completes a full payroll run and distributes locked payslips.
-- An employee completes clock-in, leave request, and payslip view entirely from mobile.
+- An employee completes clock-in, leave request, and payslip view entirely from the web app.
 - A manager runs a review cycle and approves team leave from web.
 - A cross-branch role sees consolidated analytics across all branches.
 - All sensitive writes appear in the immutable audit log.
